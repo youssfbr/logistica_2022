@@ -4,6 +4,9 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +14,8 @@ import com.github.youssfbr.logistica.domain.model.Cliente;
 import com.github.youssfbr.logistica.repositories.IClienteRepository;
 import com.github.youssfbr.logistica.services.interfaces.IClienteService;
 import com.github.youssfbr.logistica.services.exceptions.EntityNotFoundException;
+import com.github.youssfbr.logistica.services.exceptions.DatabaseException;
+import com.github.youssfbr.logistica.services.exceptions.InternalServerError;
 
 
 @Service
@@ -50,6 +55,22 @@ public class ClienteService implements IClienteService {
 		cliente.setId(id);
 
 		return clienteRepository.save(cliente);
+	}
+
+	@Override
+	public void delete(Long id) throws EntityNotFoundException {
+		try {
+			clienteRepository.deleteById(id);
+		}
+		catch (EmptyResultDataAccessException e) {
+			throw new EntityNotFoundException(id);
+		}
+		catch (DataIntegrityViolationException e) {
+			throw new DatabaseException("Não foi possível excluir. Violação de integridade.", HttpStatus.BAD_REQUEST);
+		}
+		catch (Exception e) {
+			throw new InternalServerError("Erro interno. Por favor entrar em contato com o suporte.", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	private Cliente verifyIfExists(final Long id) throws EntityNotFoundException {

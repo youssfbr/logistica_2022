@@ -8,9 +8,10 @@ import com.github.youssfbr.logistica.services.exceptions.EntityNotFoundException
 public interface IClienteService {
 
 	List<Cliente> findAll();
-	List<Cliente> findByNome(final String nome);
-	Cliente findById(final Long id) throws EntityNotFoundException;
-	Cliente insert(final Cliente cliente);
-	Cliente update(final Long id, final Cliente cliente) throws EntityNotFoundException;
-	
+	List<Cliente> findByNome(String nome);
+	Cliente findById(Long id) throws EntityNotFoundException;
+	Cliente insert(Cliente cliente);
+	Cliente update(Long id, Cliente cliente) throws EntityNotFoundException;
+	void delete(Long id) throws EntityNotFoundException;
+
 }
