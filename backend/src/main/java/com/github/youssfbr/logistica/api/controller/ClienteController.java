@@ -26,6 +26,11 @@ public class ClienteController {
 		return ResponseEntity.ok(clienteService.findAll());
 	}
 	
+	@GetMapping("/nome/{nome}")
+	public ResponseEntity<List<Cliente>> findByNome(@PathVariable String nome) {
+		return ResponseEntity.ok(clienteService.findByNome(nome));
+	}
+	
 	@GetMapping("{id}")
 	public ResponseEntity<Cliente> findAll(@PathVariable Long id) {
 		return ResponseEntity.ok(clienteService.findById(id));
