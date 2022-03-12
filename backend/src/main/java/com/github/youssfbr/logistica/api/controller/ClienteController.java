@@ -1,22 +1,22 @@
 package com.github.youssfbr.logistica.api.controller;
 
+import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.github.youssfbr.logistica.domain.model.Cliente;
 import com.github.youssfbr.logistica.services.interfaces.IClienteService;
+import com.github.youssfbr.logistica.services.exceptions.EntityNotFoundException;
 
-import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/clientes")
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class ClienteController {
 	
 	private final IClienteService clienteService;
@@ -32,7 +32,19 @@ public class ClienteController {
 	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity<Cliente> findAll(@PathVariable Long id) {
+	public ResponseEntity<Cliente> findAll(@PathVariable Long id) throws EntityNotFoundException {
 		return ResponseEntity.ok(clienteService.findById(id));
 	}
+
+	@PostMapping
+	public ResponseEntity<Cliente> insert(@RequestBody Cliente cliente) {
+
+		cliente = clienteService.insert(cliente);
+
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(cliente.getId()).toUri();
+
+		return ResponseEntity.created(uri).body(cliente);
+	}
+
 }
