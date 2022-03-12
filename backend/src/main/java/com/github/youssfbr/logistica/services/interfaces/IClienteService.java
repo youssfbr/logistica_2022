@@ -11,5 +11,6 @@ public interface IClienteService {
 	List<Cliente> findByNome(final String nome);
 	Cliente findById(final Long id) throws EntityNotFoundException;
 	Cliente insert(final Cliente cliente);
+	Cliente update(final Long id, final Cliente cliente) throws EntityNotFoundException;
 	
 }

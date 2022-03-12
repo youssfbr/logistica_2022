@@ -27,22 +27,35 @@ public class ClienteService implements IClienteService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<Cliente> findByNome(String nome) {		
+	public List<Cliente> findByNome(final String nome) {
 		return clienteRepository.findByNomeContaining(nome);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Cliente findById(Long id) throws EntityNotFoundException {
-		return clienteRepository
-				.findById(id)
-				.orElseThrow(() -> new EntityNotFoundException(id));
+	public Cliente findById(final Long id) throws EntityNotFoundException { return verifyIfExists(id); }
+
+	@Override
+	@Transactional
+	public Cliente insert(final Cliente cliente) {
+		return clienteRepository.save(cliente);
 	}
 
 	@Override
 	@Transactional
-	public Cliente insert(Cliente cliente) {
+	public Cliente update(final Long id, final Cliente cliente) throws EntityNotFoundException {
+
+		verifyIfExists(id);
+
+		cliente.setId(id);
+
 		return clienteRepository.save(cliente);
+	}
+
+	private Cliente verifyIfExists(final Long id) throws EntityNotFoundException {
+		return clienteRepository
+				.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException(id));
 	}
 
 }

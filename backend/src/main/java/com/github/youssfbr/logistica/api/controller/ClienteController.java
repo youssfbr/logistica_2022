@@ -47,4 +47,12 @@ public class ClienteController {
 		return ResponseEntity.created(uri).body(cliente);
 	}
 
+	@PutMapping("{id}")
+	public ResponseEntity<Cliente> update(@PathVariable Long id, @RequestBody Cliente cliente) throws EntityNotFoundException {
+
+		cliente = clienteService.update(id, cliente);
+
+		return ResponseEntity.ok(cliente);
+	}
+
 }
